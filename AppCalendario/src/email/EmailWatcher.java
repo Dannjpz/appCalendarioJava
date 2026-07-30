@@ -16,16 +16,18 @@ public class EmailWatcher {
 	private final String username;
 	private final String password;
 	private final boolean useSSL;
+	private final String accountLabel;
 
 	// Para no procesar correos muy viejos: empezamos "hace 5 minutos"
 	private LocalDateTime lastCheckTime = LocalDateTime.now().minusMinutes(5);
 
-	public EmailWatcher(String host, int port, String username, String password, boolean useSSL) {
+	public EmailWatcher(String host, int port, String username, String password, boolean useSSL, String accountLabel) {
 		this.host = host;
 		this.port = port;
 		this.username = username;
 		this.password = password;
 		this.useSSL = useSSL;
+		this.accountLabel = accountLabel;
 	}
 
 	public void checkNewEmails() {
@@ -83,7 +85,7 @@ public class EmailWatcher {
 			inbox.close(false);
 			store.close();
 		} catch (Exception e) {
-			System.err.println("Error revisando correos:");
+			System.err.println("Error revisando correos [" + accountLabel + "]:");
 			e.printStackTrace();
 		}
 	}
@@ -112,7 +114,8 @@ public class EmailWatcher {
 				subject = "(sin asunto)";
 
 			// Aquí el mensaje que te llegará a WhatsApp
-			String mensaje = "📩 Nuevo correo en tu bandeja\n" + "De: " + fromText + "\n" + "Asunto: " + subject;
+			String mensaje = "📩 [" + accountLabel + "] Nuevo correo en tu bandeja\n" + "De: " + fromText + "\n"
+					+ "Asunto: " + subject;
 
 			WhatsAppClient.sendTextMessage(mensaje);
 		} catch (Exception e) {

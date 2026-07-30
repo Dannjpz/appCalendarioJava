@@ -6,8 +6,7 @@ import java.time.format.DateTimeFormatter;
 public class Task {
 
 	public enum Priority {
-		LOW,
-		MEDIUM, HIGH
+		LOW, MEDIUM, HIGH
 	}
 
 	private final int id;
@@ -17,10 +16,14 @@ public class Task {
 	private boolean reminded;
 	private Priority priority;
 	private String description;
+	private Category category;
+	private String notes;
+	private int progressPercent;
 
-	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm a");
 
-	public Task(int id, String title, LocalDateTime reminderTime, Priority priority, String description) {
+	public Task(int id, String title, LocalDateTime reminderTime, Priority priority, String description,
+			Category category) {
 		this.id = id;
 		this.title = title;
 		this.reminderTime = reminderTime;
@@ -28,6 +31,39 @@ public class Task {
 		this.reminded = false;
 		this.priority = (priority != null) ? priority : Priority.MEDIUM;
 		this.description = (description != null) ? description : "";
+		this.category = category;
+		this.notes = "";
+		this.progressPercent = 0;
+	}
+
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = (notes != null) ? notes : "";
+	}
+
+	public int getProgressPercent() {
+		return progressPercent;
+	}
+
+	public void setProgressPercent(int progressPercent) {
+		if (progressPercent < 0) {
+			progressPercent = 0;
+		}
+		if (progressPercent > 100) {
+			progressPercent = 100;
+		}
+		this.progressPercent = progressPercent;
+	}
+
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
 	}
 
 	public int getId() {
@@ -90,7 +126,8 @@ public class Task {
 	public String toDisplayString() {
 		String estado = completed ? "✔ completada" : "⏳ pendiente";
 		String fecha = reminderTime.format(FORMATTER);
-		return "[" + id + "] " + fecha + " - " + title + " (Prioridad: " + priorityLabel() + ", " + estado + ")";
+		return "[" + category + "] [" + id + "] " + fecha + " - " + title + " (Prioridad: " + priorityLabel() + ", "
+				+ estado + ")";
 	}
 
 	@Override

@@ -18,8 +18,9 @@ public class DatePickerDialog extends JDialog {
 
 	public DatePickerDialog(JFrame parent, LocalDate initialDate) {
 		super(parent, "Seleccionar fecha", true);
-		this.currentMonth = YearMonth.from(initialDate != null ? initialDate : LocalDate.now());
-		this.selectedDate = null;
+		LocalDate baseDate = (initialDate != null) ? initialDate : LocalDate.now();
+		this.currentMonth = YearMonth.from(baseDate);
+		this.selectedDate = baseDate;
 
 		buildUI();
 		updateCalendar();
@@ -102,6 +103,12 @@ public class DatePickerDialog extends JDialog {
 			LocalDate date = currentMonth.atDay(day);
 			JButton dayButton = new JButton(String.valueOf(day));
 			dayButton.setMargin(new Insets(2, 2, 2, 2));
+
+			if (date.equals(selectedDate)) {
+				dayButton.setBackground(new Color(173, 216, 230));
+				dayButton.setOpaque(true);
+				dayButton.setBorderPainted(true);
+			}
 
 			dayButton.addActionListener(e -> {
 				selectedDate = date;

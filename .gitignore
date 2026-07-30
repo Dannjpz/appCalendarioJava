@@ -1,1 +1,10 @@
 /.metadata/
+config.properties
+tasks.json
+reminders.json
+notes.json
+projects.json
+*.jar
+*.exe
+png.png
+icono.png

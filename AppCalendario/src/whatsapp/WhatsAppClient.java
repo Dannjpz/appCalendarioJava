@@ -7,9 +7,22 @@ import java.net.URL;
 public class WhatsAppClient {
 
 	// TODO: reemplaza estos valores cuando tengas tu configuración real
-	private static final String ACCESS_TOKEN = "EAAR0Bf9FadABRKdg4FCMZCO6PZAgT0iQMwUzkU5tzmB26jauIKi66DvIH3a2bUWbnKB7PdNortuleAvazs0f1H7Gt95JKp1NS30DtJqtqf2mMToKi9ZCgVuCWqos3gDPTblj7MFH6FQQXywqLpo5mZBVKgrrDCZA97cDHHxyYlxVdvZA0SXhK3LDlMZBXJGAiHNtqL9kw1ltZBlRs6G7nHcizV8WYzIG7j1XALUcfuWNAA1nr9ZCT7vDukLZAnnXBsDfIU9wwI2EhOExvPZCOtH8SaQ";
-	private static final String PHONE_NUMBER_ID = "1133039249882181";
-	private static final String RECIPIENT_NUMBER = "522228739509";
+	private static final String ACCESS_TOKEN;
+	private static final String PHONE_NUMBER_ID;
+	private static final String RECIPIENT_NUMBER;
+
+	static {
+		java.util.Properties props = new java.util.Properties();
+		try (java.io.InputStream in = new java.io.FileInputStream("config.properties")) {
+			props.load(in);
+		} catch (java.io.IOException e) {
+			throw new RuntimeException(
+					"No se pudo cargar config.properties. Copia config.properties.example y complétalo.", e);
+		}
+		ACCESS_TOKEN = props.getProperty("whatsapp.access.token");
+		PHONE_NUMBER_ID = props.getProperty("whatsapp.phone.number.id");
+		RECIPIENT_NUMBER = props.getProperty("whatsapp.recipient.number");
+	}
 
 	/**
 	 * Envía un mensaje de texto simple por WhatsApp usando WhatsApp Cloud API.
@@ -63,6 +76,7 @@ public class WhatsAppClient {
 	private static String escapeForJson(String text) {
 		if (text == null)
 			return "";
-		return text.replace("\\", "\\\\").replace("\"", "\\\"");
+		return text.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r").replace("\t",
+				"\\t");
 	}
 }
